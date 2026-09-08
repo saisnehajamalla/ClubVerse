@@ -12,10 +12,20 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String community;
+
+    @Column(nullable = false)
+    private String title;
+
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    private String mediaUrl;
+
     private boolean anonymous;
+
+    private int likeCount = 0;
 
     private LocalDateTime createdAt;
 
@@ -30,6 +40,22 @@ public class Post {
         return id;
     }
 
+    public String getCommunity() {
+        return community;
+    }
+
+    public void setCommunity(String community) {
+        this.community = community;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getContent() {
         return content;
     }
@@ -38,12 +64,28 @@ public class Post {
         this.content = content;
     }
 
+    public String getMediaUrl() {
+        return mediaUrl;
+    }
+
+    public void setMediaUrl(String mediaUrl) {
+        this.mediaUrl = mediaUrl;
+    }
+
     public boolean isAnonymous() {
         return anonymous;
     }
 
     public void setAnonymous(boolean anonymous) {
         this.anonymous = anonymous;
+    }
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
     }
 
     public LocalDateTime getCreatedAt() {
