@@ -2,7 +2,6 @@ package com.clubverse.clubverse_backend.controller;
 
 import com.clubverse.clubverse_backend.dto.ReportRequest;
 import com.clubverse.clubverse_backend.dto.ReportResponse;
-import com.clubverse.clubverse_backend.entity.Report;
 import com.clubverse.clubverse_backend.service.ReportService;
 
 import org.springframework.http.ResponseEntity;
@@ -35,21 +34,47 @@ public class ReportController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReportResponse>> getAllReports() {
+    public ResponseEntity<List<ReportResponse>> getAllReports(
+        @RequestParam(required = false) String search,
+        @RequestParam(required = false) String category,
+        @RequestParam(required = false) String severity,
+        @RequestParam(required = false) String status,
+        @RequestParam(required = false) String startDate,
+        @RequestParam(required = false) String endDate) {
 
-        return ResponseEntity.ok(
-                reportService.getAllReports()
-        );
+    return ResponseEntity.ok(
+            reportService.getAllReports(
+                    search,
+                    category,
+                    severity,
+                    status,
+                    startDate,
+                    endDate
+            )
+    );
     }
+    @GetMapping("/page")
+    public ResponseEntity<?> getPaginatedReports(
+        @RequestParam(required = false) String search,
+        @RequestParam(required = false) String category,
+        @RequestParam(required = false) String severity,
+        @RequestParam(required = false) String status,
+        @RequestParam(required = false) String startDate,
+        @RequestParam(required = false) String endDate,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size) {
 
-    @PutMapping("/{reportId}/status")
-    public ResponseEntity<ReportResponse> updateStatus(
-            @PathVariable Long reportId,
-            @RequestParam String status) {
-
-        ReportResponse response =
-                reportService.updateStatus(reportId, status);
-
-        return ResponseEntity.ok(response);
+    return ResponseEntity.ok(
+            reportService.getPaginatedReports(
+                    search,
+                    category,
+                    severity,
+                    status,
+                    startDate,
+                    endDate,
+                    page,
+                    size
+            )
+    );
     }
 }
