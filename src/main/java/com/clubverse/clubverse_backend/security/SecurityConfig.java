@@ -27,9 +27,25 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
-                        .anyRequest().authenticated()
-                )
+        .requestMatchers(
+                "/api/auth/register",
+                "/api/auth/login"
+        ).permitAll()
+
+        // Club Admin
+        .requestMatchers(
+                "/api/announcements/**",
+                "/api/volunteer/**"
+        ).hasAnyRole("CLUB_ADMIN", "PLATFORM_ADMIN")
+
+        // Platform Admin
+        .requestMatchers(
+                "/api/reports/**"
+        ).hasRole("PLATFORM_ADMIN")
+
+        // Any authenticated user
+        .anyRequest().authenticated()
+)
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
