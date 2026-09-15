@@ -9,5 +9,6 @@ public enum NotificationType {
     COMMENT,
     DM,
     REWARD,
+    BADGE,
     MODERATION
 }

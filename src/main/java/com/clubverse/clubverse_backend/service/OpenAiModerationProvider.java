@@ -5,6 +5,7 @@ import com.clubverse.clubverse_backend.entity.ModerationResult;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -13,6 +14,11 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
+@ConditionalOnProperty(
+    name = "ai.moderation.enabled",
+    havingValue = "true",
+    matchIfMissing = false
+)
 public class OpenAiModerationProvider implements AiModerationProvider {
 
     private final RestClient restClient;

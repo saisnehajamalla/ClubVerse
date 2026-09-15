@@ -2,6 +2,7 @@ package com.clubverse.clubverse_backend.service;
 
 import com.clubverse.clubverse_backend.entity.ModerationDecision;
 import com.clubverse.clubverse_backend.entity.ModerationResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -9,14 +10,18 @@ import java.time.LocalDateTime;
 @Service
 public class ModerationService {
 
+    @Autowired(required = false)
     private final AiModerationProvider aiModerationProvider;
 
-    public ModerationService(AiModerationProvider aiModerationProvider) {
+    public ModerationService(@Autowired(required = false) AiModerationProvider aiModerationProvider) {
         this.aiModerationProvider = aiModerationProvider;
     }
 
     public ModerationResult moderate(String content) {
         try {
+            if (aiModerationProvider == null) {
+                return reviewResult("AI moderation not configured");
+            }
             ModerationResult result = aiModerationProvider.moderate(content);
             if (result == null || result.getDecision() == null) {
                 return reviewResult("AI provider returned no moderation decision");

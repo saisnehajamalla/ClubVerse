@@ -1,0 +1,62 @@
+package com.clubverse.clubverse_backend.dto;
+
+public class BadgeResponse {
+    private Long id;
+    private String name;
+    private String description;
+    private Long requiredRewardPoints;
+    private String icon;
+
+    // Constructors
+    public BadgeResponse() {
+    }
+
+    public BadgeResponse(Long id, String name, String description, Long requiredRewardPoints, String icon) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.requiredRewardPoints = requiredRewardPoints;
+        this.icon = icon;
+    }
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Long getRequiredRewardPoints() {
+        return requiredRewardPoints;
+    }
+
+    public void setRequiredRewardPoints(Long requiredRewardPoints) {
+        this.requiredRewardPoints = requiredRewardPoints;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+}
