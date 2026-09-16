@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -17,11 +18,21 @@ class ModerationServiceTest {
     private AiModerationProvider aiModerationProvider;
 
     @Test
+    void disabledModerationApprovesWithoutInvokingProvider() {
+        ModerationResult result = new ModerationService(aiModerationProvider, false)
+                .moderate("content");
+
+        assertEquals(ModerationDecision.APPROVE, result.getDecision());
+        assertEquals("disabled", result.getProvider());
+        verifyNoInteractions(aiModerationProvider);
+    }
+
+    @Test
     void returnsApproveDecision() {
         when(aiModerationProvider.moderate("clean content"))
                 .thenReturn(result(ModerationDecision.APPROVE));
 
-        ModerationResult result = new ModerationService(aiModerationProvider)
+        ModerationResult result = new ModerationService(aiModerationProvider, true)
                 .moderate("clean content");
 
         assertEquals(ModerationDecision.APPROVE, result.getDecision());
@@ -32,7 +43,7 @@ class ModerationServiceTest {
         when(aiModerationProvider.moderate("harmful content"))
                 .thenReturn(result(ModerationDecision.REJECT));
 
-        ModerationResult result = new ModerationService(aiModerationProvider)
+        ModerationResult result = new ModerationService(aiModerationProvider, true)
                 .moderate("harmful content");
 
         assertEquals(ModerationDecision.REJECT, result.getDecision());
@@ -43,7 +54,7 @@ class ModerationServiceTest {
         when(aiModerationProvider.moderate("ambiguous content"))
                 .thenReturn(result(ModerationDecision.REVIEW));
 
-        ModerationResult result = new ModerationService(aiModerationProvider)
+        ModerationResult result = new ModerationService(aiModerationProvider, true)
                 .moderate("ambiguous content");
 
         assertEquals(ModerationDecision.REVIEW, result.getDecision());
@@ -54,7 +65,7 @@ class ModerationServiceTest {
         when(aiModerationProvider.moderate("unavailable content"))
                 .thenThrow(new IllegalStateException("provider unavailable"));
 
-        ModerationResult result = new ModerationService(aiModerationProvider)
+        ModerationResult result = new ModerationService(aiModerationProvider, true)
                 .moderate("unavailable content");
 
         assertEquals(ModerationDecision.REVIEW, result.getDecision());

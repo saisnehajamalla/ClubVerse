@@ -1,5 +1,6 @@
 package com.clubverse.clubverse_backend.security;
 
+import com.clubverse.clubverse_backend.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -28,6 +29,17 @@ public class JwtService {
                 .compact();
     }
 
+    public String generateToken(String email, User.Role role) {
+
+        return Jwts.builder()
+                .subject(email)
+                .claim("role", role.name())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 86400000))
+                .signWith(secretKey)
+                .compact();
+    }
+
     public String extractEmail(String token) {
 
         Claims claims = Jwts.parser()
@@ -37,5 +49,16 @@ public class JwtService {
                 .getPayload();
 
         return claims.getSubject();
+    }
+
+    public String extractRole(String token) {
+
+        Claims claims = Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        return claims.get("role", String.class);
     }
 }
